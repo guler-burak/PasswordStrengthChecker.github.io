@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şifre Kontrolü</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.3/brython.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        #result { font-weight: bold; color: red; }
+    </style>
+</head>
+<body onload="brython()">
+    <h2>Şifre Güçlülük Kontrolü</h2>
+    <input type="password" id="password" placeholder="Şifrenizi girin">
+    <button onclick="check_password()">Kontrol Et</button>
+    <p id="result"></p>
+
+    <script type="text/python">
+        from browser import document
+
+        special_characters = ["@", "$", "!", "*", "+", "&", "%"]
+
+        def check_password():
+            password = document["password"].value
+            errors = []
+
+            if len(password) < 8:
+                errors.append("Şifre en az 8 karakter uzunluğunda olmalı.")
+
+            if len(password) > 16:
+                errors.append("Şifre 16 karakteri geçmemeli.")
+
+            if not any(char.isnumeric() for char in password):
+                errors.append("Şifre en az bir rakam içermeli.")
+
+            if not any(char.isalpha() for char in password):
+                errors.append("Şifre harf içermeli.")
+
+            if not any(char in special_characters for char in password):
+                errors.append("Şifre özel karakter içermeli (@, $, !, *, +, &, %).")
+
+            if errors:
+                document["result"].text = " ".join(errors)
+                document["result"].style.color = "red"
+            else:
+                document["result"].text = "Şifre başarıyla oluşturuldu!"
+                document["result"].style.color = "green"
+    </script>
+</body>
+</html>
